@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="'안녕하세요??!! ' + ${data}" >안녕하세요. 손님</p>
+<!--
+보통 html 수정사항을 웹에서 보고자 할때 서버 자체를 재실행해야함
+build.gradle에
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	라이브러리를 추가해주고, 서버를 재시작해서 restartedMain이 나오면 잘 된 것!
+	이제 build 에서 recompile만 해 주어도 변경사항을 웹에서 볼 수 있다 !
+
+-->
+</body>
+</html>
