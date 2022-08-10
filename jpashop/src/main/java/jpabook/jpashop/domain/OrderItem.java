@@ -19,12 +19,12 @@ public class OrderItem {
     @Column(name="order_item_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY) //단방향 관계
     @JoinColumn(name="item_id")
     private Item item;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name="order_id")
+    @ManyToOne(fetch = LAZY) //order와 orderitem에서 여기가 "다" . 연관관계의 주인
+    @JoinColumn(name="order_id") //하나의 order가 여러개의 orderItems를 가질 수 있음 . orderItems는 하나의 order만 가질 수 있음
     private Order order;
 
     private int orderPrice; //주문 가격

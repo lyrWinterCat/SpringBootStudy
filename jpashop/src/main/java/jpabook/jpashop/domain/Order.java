@@ -22,14 +22,19 @@ public class Order {
     @Column(name="order_id")
     private Long id;
 
+    //member_id FK를 가지고 있음 >> 연관관계의 주인!
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL) //cascade 타입을 all로 준다면 persist를 각각에 호출해주지 않아도 order 하나만 persist해 줄 수 있음
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>(); // 여기가 연관관계 거울. mapped by(OrderItem의 order)를 통해 결정될거야 !
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL) //order persist할 때 delivery도 같이 persist 할게 !
+    // 일대일 매핑 - 근심과 걱정.. (order-delivery)
+    // 어디에 FK를 두느냐에 따라 장단점이 있음 (어디에 두던 상관은 없기 때문)
+    // Access를 많이 하는 쪽에 FK를 두는 쪽이 편함 (강사스타일) >> Order에 접근을 많이 하니, 여기에 두겠다.
+    // 위의 결정에 따라 연관관계 주인이 정해짐 : order가 주인! > JoinColumn 설정
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL) //cascade : order persist할 때 delivery도 같이 persist 할게 !
     @JoinColumn(name="delivery_id")
     private Delivery delivery;
 

@@ -20,7 +20,7 @@ public class Member {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "member") //일대다 매핑
+    @OneToMany(mappedBy = "member") //주인이 아님. 연관관계의 거울이다 라는 표현 mapped by (order.class의 member)를 통해 결정될거야.
     private List<Order> orders = new ArrayList<>(); //가장 좋은 방법
     // 컬렉션은 필드에서 초기화 (안전!) + 하이버네이트가 관리하기 편함
 
