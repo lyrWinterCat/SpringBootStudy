@@ -34,11 +34,11 @@ class MemberServiceTest {
         Long savedId = memberService.join(member);
 
         //then
-        //em.flush();
+        //em.flush(); //insert문 확인 - db에 쿼리문 날림
         assertEquals(member,memberRepository.findOne(savedId));
     }
 
-    //@Test(expected=IllegalStateException.class)
+    //@Test(expected=IllegalStateException.class) //2. try_catch 대용으로 쓸 수 있는 테스트 어노테이션
     @Test
     public void 중복_회원_예외() throws Exception{
         //given
@@ -48,14 +48,14 @@ class MemberServiceTest {
         Member member2 = new Member();
         member2.setName("kim");
 
-
-
         //when
         memberService.join(member1);
         //memberService.join(member2); //예외가 발생해야해 !
 
+        //3. assert로 던질 수도 있음
         assertThrows(IllegalStateException.class,()-> memberService.join(member2));
 
+        //1. try_catch문 너무 지저분해..
 //        memberService.join(member1);
 //        try {
 //            memberService.join(member2); //예외가 발생해야해 !
@@ -64,7 +64,7 @@ class MemberServiceTest {
 //        }
 
         //then
-        //fail("예외가 발생해야 하는데..");
+        //fail("예외가 발생해야 하는데.."); //여기로 들어오면 안됨.
     }
 
 }

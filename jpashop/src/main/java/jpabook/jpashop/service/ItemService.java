@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = true) //readOnly > 저장 안됨
 @RequiredArgsConstructor
-public class ItemService {
+public class ItemService { //repository에 위임하는 기능만 구현하므로 간단.
 
         private final ItemRepository itemRepository;
 
-        @Transactional
+        @Transactional // 메서드와 가까운 어노테이션이 우선권을 가지므로 저장 가능
         public void saveItem(Item item){
             itemRepository.save(item);
         }

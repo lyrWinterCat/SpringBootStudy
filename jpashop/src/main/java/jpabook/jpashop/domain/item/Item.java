@@ -31,14 +31,16 @@ public abstract class Item  {
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 
-    // 비즈니스 로직
+    // 비즈니스 로직 - setter로 quantity를 바꿀 것이 아니라, 메서드를 통해서 접근해야 함 !
 
     //stock 증가
     public void addStock(int quantity){
         this.stockQuantity += quantity;
     }
 
-    //stock감소
+    /**
+    stock 감소
+     */
     public void removeStock(int quantity){
         int restStock = stockQuantity-quantity;
         if(restStock<0){
