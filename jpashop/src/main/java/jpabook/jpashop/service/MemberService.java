@@ -57,4 +57,10 @@ public class MemberService {
         return memberRepository.findOne(memberId);
     }
 
+    //회원정보 수정 (변경성 메서드)
+    @Transactional //영속성 컨텍스트에서 가져올거야
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
+    }
 }

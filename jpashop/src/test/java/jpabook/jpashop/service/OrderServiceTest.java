@@ -51,6 +51,7 @@ class OrderServiceTest {
         assertEquals(8,book.getStockQuantity(),"주문 수량만큼 재고가 줄어야 한다");
     }
 
+    //테스트에서 자주 쓰는 객체는 아예 메서드로 생성하도록 설정하는 편이 편하다.
     private Item createBook(String name, int price, int stockQuantity) {
         Item book = new Book();
         book.setName(name);
@@ -70,14 +71,14 @@ class OrderServiceTest {
 
     @Test
     public void 주문취소() throws Exception{
-        //given
+        //given - 준비
         Member member = createMember();
         Item book = createBook("spring공부",10000,10);
 
         int orderCount=2;
-
         Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
-        //when
+
+        //when - 실제 테스트를 하고싶은 구문
         orderService.cancelOrder(orderId);
 
         //then

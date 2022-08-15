@@ -1,7 +1,9 @@
 package jpabook.jpashop.repository;
 
+import jpabook.jpashop.api.OrderApiController;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -72,7 +74,7 @@ public class OrderRepository {
     // JPA Criteria : jpql을 자바 코드로 짤 수 있도록 도와줌 >> 비추천 / 실무용은 아님 (유지보수성 제로 )
     public List<Order> findAllByCriteria(OrderSearch orderSearch){
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Order> cq = cb.createQuery(Order.class);
+        CriteriaQuery<Order> cq = cb.createQuery(Order.class); //응답타입 세팅
         Root<Order> o = cq.from(Order.class);
         Join<Order, Member> m = o.join("member", JoinType.INNER); //회원과 조인
         List<Predicate> criteria = new ArrayList<>();
@@ -94,6 +96,53 @@ public class OrderRepository {
         return query.getResultList();
     }
     // 위와 같은 단점들로 인해 나온 해결책 : QueryDSL
+
+    //manyToOne, oneToOne 코드
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o"+
+                        " join fetch o.member m"+
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
+
+    // oneToMany
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                "select distinct o from Order o" //2개
+                + " join fetch o.member m"
+                + " join fetch o.delivery d"
+                + " join fetch o.orderItems oi" //4개
+                + " join fetch oi.item i", Order.class
+        ).getResultList();
+        // 페이징 처리 불가능 !!
+//        return em.createQuery(
+//                "select distinct o from Order o" //2개
+//                + " join fetch o.member m"
+//                + " join fetch o.delivery d"
+//                + " join fetch o.orderItems oi" //4개
+//                + " join fetch oi.item i", Order.class
+//        ).setFirstResult(1).setMaxResults(100) //>>>불가능!!
+//        .getResultList();
+    }
+
+    // v3.1 OneToMany 페이징 처리 쿼리
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o"+
+                        " join fetch o.member m"+
+                        " join fetch o.delivery d", Order.class
+        ).setFirstResult(offset).setMaxResults(limit).getResultList();
+    }
+
+    // order.simplequery 패키지로 이동함~~
+//    public List<OrderSimpleQueryDto> findOrderDtos(){
+//        return em.createQuery("select new jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) " +
+//                        "from Order o" +
+//                " join o.member m" +
+//                " join o.delivery d", OrderSimpleQueryDto.class)
+//                .getResultList();
+//    }
 
 
 }

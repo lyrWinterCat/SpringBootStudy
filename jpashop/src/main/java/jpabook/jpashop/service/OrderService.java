@@ -52,7 +52,9 @@ public class OrderService {
         //주문엔티티 조회
         Order order = orderRepository.findOne(orderId);
         //주문 취소
-        order.cancel();
+        order.cancel(); //원래는 order의 바뀐 status나 stock에 대한 새로 쿼리문을 직접 날려야 함.
+        // 단, JPA에서는 entity의 변경 포인트를 더티체킹(변경내영감지)를 통해
+        // 데이터베이스에 update 쿼리를 날려줌 >> JPA 의 가장 큰 장점!
     }
 
       //검색

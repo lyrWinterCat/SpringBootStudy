@@ -4,11 +4,13 @@ import jpabook.jpashop.domain.Category;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@BatchSize(size=100) //컬렉션이 아닌 경우 위에 선언
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) //상속관계 전략 - 테이블 하나에 다 넣을거야 : single_table
 @DiscriminatorColumn(name="dtype") // 구분 타입 설정. 상속 아이템의 @DiscriminatorValue("설정값") 로 설정

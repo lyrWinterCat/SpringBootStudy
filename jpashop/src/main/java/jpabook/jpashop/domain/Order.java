@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Table(name="orders")
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //new Order() 막아주는 어노테이션. (직접 생성을 막아줌)
 public class Order {
 
     @Id @GeneratedValue
@@ -26,7 +27,10 @@ public class Order {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+    // member = new ByteBuddyIntercepter 생성
 
+    //보다 확실히 하고싶다면 배치 어노테이션을 부여주면 됨 (컬렉션인 경우 여기에 직접)
+    @BatchSize(size=1000)
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL) //cascade 타입을 all로 준다면 persist를 각각에 호출해주지 않아도 order 하나만 persist해 줄 수 있음
     private List<OrderItem> orderItems = new ArrayList<>(); // 여기가 연관관계 거울. mapped by(OrderItem의 order)를 통해 결정될거야 !
 
@@ -80,6 +84,7 @@ public class Order {
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
         }
         this.setStatus(OrderStatus.CANCEL);
+        //roof 돌면서 재고 상태 되돌리기
         for (OrderItem orderItem : orderItems) {
             orderItem.cancel();
         }

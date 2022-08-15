@@ -27,6 +27,7 @@ public class ItemService { //repository에 위임하는 기능만 구현하므�
         public Item updateItem(Long itemId, String name, int price, int stockQuantity){ //변경 감지 == dirty checking update 방법
             Item findItem = itemRepository.findOne(itemId);
             // findItem.change(price, name, ...) >> 이런식으로 의미있는 메서드로 set을 해주는게 좋음
+            // service에서 updateItemDto 로 name, price, stockQuantity를 갖는 클래스를 만들어서 하는 편이 더 좋음
 
             // 이렇게 set으로 쫙 까는 것은 좋은 코딩이 아님 // 실무에서 뒷목잡음
             findItem.setPrice(price);
