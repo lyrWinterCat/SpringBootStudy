@@ -1,7 +1,9 @@
 package jpabook.jpashop.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jpabook.jpashop.api.OrderApiController;
-import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,10 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static jpabook.jpashop.domain.QMember.*;
+import static jpabook.jpashop.domain.QOrder.*;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -96,6 +102,56 @@ public class OrderRepository {
         return query.getResultList();
     }
     // 위와 같은 단점들로 인해 나온 해결책 : QueryDSL
+
+    //QueryDSL
+    public List<Order> findAll(OrderSearch orderSearch){
+        QOrder order = QOrder.order;
+        QMember member = QMember.member;
+
+        JPAQueryFactory query = new JPAQueryFactory(em);
+//        return query
+//                .select(order)
+//                .from(order)
+//                .join(order.member, member)
+//                .limit(1000)
+//                .fetch();
+//    }
+
+        //compile 시점에 오타 에러가 다 잡힘
+        return query
+                .select(order)
+                .from(order)
+                .join(order.member, member)
+                .where(statusEq(orderSearch.getOrderStatus()), //condition 넣기
+                        nameLike(orderSearch.getMemberName()))
+                .limit(1000)
+                .fetch();
+    }
+
+    private BooleanExpression statusEq(OrderStatus statusCond) {
+        if (statusCond == null) {
+            return null;
+        }
+        return order.status.eq(statusCond);
+    }
+
+    private BooleanExpression nameLike(String memberName) {
+
+        if (!StringUtils.hasText(memberName)) {
+            return null;
+        }
+        return member.name.like(memberName);
+    }
+
+//    private BooleanExpression nameLike(OrderSearch orderSearch, QMember member){
+//        if(!StringUtils.hasText(orderSearch.getMemberName())){
+//            return null;
+//        }
+//        return QMember.member.name.like(orderSearch.getMemberName());
+//    }
+
+    //queryDsl
+
 
     //manyToOne, oneToOne 코드
     public List<Order> findAllWithMemberDelivery() {

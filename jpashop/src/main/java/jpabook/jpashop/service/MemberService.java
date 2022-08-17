@@ -54,13 +54,13 @@ public class MemberService {
 
     //@Transactional(readOnly = true)
     public Member findOne(Long memberId){
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
     //회원정보 수정 (변경성 메서드)
     @Transactional //영속성 컨텍스트에서 가져올거야
     public void update(Long id, String name) {
-        Member member = memberRepository.findOne(id);
+        Member member = memberRepository.findById(id).get();
         member.setName(name);
     }
 }

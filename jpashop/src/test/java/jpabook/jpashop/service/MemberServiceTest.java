@@ -2,11 +2,9 @@ package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -20,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class MemberServiceTest {
 
     @Autowired MemberService memberService;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
     @Autowired EntityManager em;
 
     //@Rollback(false)
@@ -35,7 +34,7 @@ class MemberServiceTest {
 
         //then
         //em.flush(); //insert문 확인 - db에 쿼리문 날림
-        assertEquals(member,memberRepository.findOne(savedId));
+        assertEquals(member,memberRepository.findById(savedId).get());
     }
 
     //@Test(expected=IllegalStateException.class) //2. try_catch 대용으로 쓸 수 있는 테스트 어노테이션

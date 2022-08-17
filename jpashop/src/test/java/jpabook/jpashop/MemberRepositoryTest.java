@@ -9,8 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 //@RunWith(SpringRunner.class)
 @SpringBootTest
 class MemberRepositoryTest {
@@ -26,7 +24,7 @@ class MemberRepositoryTest {
         member.setName("memberA");
         //when
         memberRepository.save(member);
-        Member findMember = memberRepository.findOne(member.getId());
+        Member findMember = memberRepository.findById(member.getId()).get();
 
         //then
         Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
